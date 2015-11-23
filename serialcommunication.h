@@ -18,12 +18,12 @@ public:
     void send(const char *data, qint64 length);
     void send(const QByteArray data);
     void closePort();
+    bool readBytes(QByteArray &bytes, int length);
 
 signals:
-    void bytesAvailable(const QByteArray);
+    void bytesAvailable();
 
 public slots:
-    void readyRead();
 
 private:
     QList<QSerialPortInfo> serials;

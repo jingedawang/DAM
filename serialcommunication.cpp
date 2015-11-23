@@ -3,12 +3,13 @@
 
 SerialCommunication::SerialCommunication(QObject *parent) : QObject(parent)
 {
-    connect(&selectedSerial, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(&selectedSerial, SIGNAL(readyRead()), this, SIGNAL(bytesAvailable()));
 }
 
 SerialCommunication::~SerialCommunication()
 {
-    selectedSerial.close();
+    if(selectedSerial.isOpen())
+        selectedSerial.close();
 }
 
 QList<QString> SerialCommunication::getSerialPorts()
@@ -59,10 +60,19 @@ void SerialCommunication::send(const QByteArray data)
     selectedSerial.write(data);
 }
 
-void SerialCommunication::readyRead()
+void SerialCommunication::closePort()
 {
-    const QByteArray bytes = selectedSerial.readAll();
-    emit bytesAvailable(bytes);
+    selectedSerial.close();
+}
+
+bool SerialCommunication::readBytes(QByteArray &bytes, int length)
+{
+    if(selectedSerial.bytesAvailable() >= length)
+    {
+        bytes = selectedSerial.read(length);
+        return true;
+    }
+    return false;
 }
 
 void SerialCommunication::refresh()

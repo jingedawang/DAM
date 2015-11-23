@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "serialcommunication.h"
+#include <QTimer>
+#include "registers.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,12 +19,16 @@ public:
     ~MainWindow();
 
 public slots:
-    void btnTestSlot();
+    void btnOpenSerialSlot();
     void bytesAvailable(const QByteArray);
+    void timeout();
 
 private:
     Ui::MainWindow *ui;
     SerialCommunication serialComm;
+    QTimer timer;
+    bool serialOpen = false;
+    Registers registers;
 };
 
 #endif // MAINWINDOW_H
