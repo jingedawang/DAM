@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
      * 将接收到的数据打印在控制台
      */
     connect(ui->btn_openSerial, SIGNAL(clicked(bool)), this, SLOT(btnOpenSerialSlot()));
-    connect(&serialComm, SIGNAL(bytesAvailable(QByteArray)), this, SLOT(bytesAvailable(QByteArray)));
+    connect(&serialComm, SIGNAL(bytesAvailable()), this, SLOT(bytesAvailable()));
     for(int i=0; i<serialComm.getSerialPorts().count(); ++i)
     {
         ui->cboSerialNumber->addItem(serialComm.getSerialPorts().at(i));
@@ -57,9 +57,8 @@ void MainWindow::btnOpenSerialSlot()
     }
 }
 
-void MainWindow::bytesAvailable(const QByteArray data)
+void MainWindow::bytesAvailable()
 {
-    qDebug() << data << endl;
     QByteArray bytes;
     while(serialComm.readBytes(bytes, 4))
     {
@@ -188,7 +187,7 @@ void MainWindow::bytesAvailable(const QByteArray data)
             frameNum.append(registers.registers[0x1b].data);
             frameNum.append(registers.registers[0x1a].data);
             frameNum.append(registers.registers[0x19].data);
-            ui->edt_current_frame->setText(frameNum.toInt());
+            ui->edt_current_frame->setText(QString::number(frameNum.toInt()));
         }
     }
 
@@ -202,7 +201,7 @@ void MainWindow::bytesAvailable(const QByteArray data)
             QByteArray ITriggerCount;
             ITriggerCount.append(registers.registers[0x11].data);
             ITriggerCount.append(registers.registers[0x10].data);
-            ui->edt_I_trigger_count->setText(ITriggerCount.toInt());
+            ui->edt_I_trigger_count->setText(QString::number(ITriggerCount.toInt()));
         }
     }
 
@@ -210,14 +209,14 @@ void MainWindow::bytesAvailable(const QByteArray data)
     //I路采样幅度MAX
     if(registers.registers.contains(0x14))
     {
-        ui->edt_I_sample_amplitude_max->setText(registers.registers[0x14].data.toInt());
+        ui->edt_I_sample_amplitude_max->setText(QString::number(registers.registers[0x14].data.toInt()));
     }
 
     //检查R15寄存器
     //I路采样幅度MIN
     if(registers.registers.contains(0x15))
     {
-        ui->edt_I_sample_amplitude_min->setText(registers.registers[0x15].data.toInt());
+        ui->edt_I_sample_amplitude_min->setText(QString::number(registers.registers[0x15].data.toInt()));
     }
 
     //检查R18寄存器
@@ -225,7 +224,7 @@ void MainWindow::bytesAvailable(const QByteArray data)
     {
         //第0位
         //I路超幅指示
-        if(registers.registers[0x18].data & 0x01)
+        if(registers.registers[0x18].data.at(1) & 0x01)
         {
             ui->edt_I_sample_amplitude_max->setText("超幅度");
         }
@@ -245,7 +244,7 @@ void MainWindow::bytesAvailable(const QByteArray data)
             QByteArray QTriggerCount;
             QTriggerCount.append(registers.registers[0x13].data);
             QTriggerCount.append(registers.registers[0x12].data);
-            ui->edt_Q_trigger_count->setText(QTriggerCount.toInt());
+            ui->edt_Q_trigger_count->setText(QString::number(QTriggerCount.toInt()));
         }
     }
 
@@ -253,14 +252,14 @@ void MainWindow::bytesAvailable(const QByteArray data)
     //Q路采样幅度MAX
     if(registers.registers.contains(0x16))
     {
-        ui->edt_Q_sample_amplitude_max->setText(registers.registers[0x16].data.toInt());
+        ui->edt_Q_sample_amplitude_max->setText(QString::number(registers.registers[0x16].data.toInt()));
     }
 
     //检查R17寄存器
     //Q路采样幅度MIN
     if(registers.registers.contains(0x17))
     {
-        ui->edt_Q_sample_amplitude_min->setText(registers.registers[0x17].data.toInt());
+        ui->edt_Q_sample_amplitude_min->setText(QString::number(registers.registers[0x17].data.toInt()));
     }
 
     //检查R18寄存器
@@ -268,7 +267,7 @@ void MainWindow::bytesAvailable(const QByteArray data)
     {
         //第1位
         //Q路超幅指示
-        if(registers.registers[0x18].data & 0x02)
+        if(registers.registers[0x18].data.at(1) & 0x02)
         {
             ui->edt_I_sample_amplitude_max->setText("超幅度");
         }

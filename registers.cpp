@@ -6,7 +6,7 @@ Registers::Registers(QObject *parent) : QObject(parent)
 
 }
 
-void Registers::updateRegister(char address, QByteArray data)
+void Registers::updateRegister(uchar address, QByteArray data)
 {
     registers[address].address = address;
     registers[address].data = data;

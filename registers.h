@@ -10,16 +10,17 @@ class Registers : public QObject
     Q_OBJECT
 public:
     explicit Registers(QObject *parent = 0);
-    void updateRegister(char address, QByteArray data);
+    void updateRegister(uchar address, QByteArray data);
 
     class Register
     {
-        char address;
+    public:
+        uchar address;
         QByteArray data;
         qint64 lastUpdated;
     };
 
-    QHash<char, Register> registers;
+    QHash<uchar, Register> registers;
 
 signals:
 

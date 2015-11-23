@@ -8,9 +8,9 @@ Command::Command(QObject *parent) : QObject(parent)
 
 }
 
-Command::Command(bool isRead, char address, QByteArray data)
+Command::Command(bool isRead, uchar address, QByteArray data)
 {
-    char read;
+    uchar read;
     if(isRead)
     {
         read = 0;
@@ -19,11 +19,11 @@ Command::Command(bool isRead, char address, QByteArray data)
     {
         read = 3;
     }
-    char byte0 = address | isRead << 6;
+    uchar byte0 = address | isRead << 6;
     QByteArray command;
     command.append(byte0);
-    char byte1;
-    char byte2;
+    uchar byte1;
+    uchar byte2;
     if(isRead)
     {
         byte1 = 0;
@@ -36,7 +36,7 @@ Command::Command(bool isRead, char address, QByteArray data)
     }
     command.append(byte1);
     command.append(byte2);
-    char byte4 = byte0 + byte1 + byte2;
+    uchar byte4 = byte0 + byte1 + byte2;
     command.append(byte4);
     if(command.length() != 4)
     {
@@ -49,10 +49,10 @@ Command::Command(bool isRead, char address, QByteArray data)
 Command::Command(QByteArray bytes)
 {
     byteArray = bytes;
-    char byte0 = bytes.at(0);
-    char byte1 = bytes.at(1);
-    char byte2 = bytes.at(2);
-    char byte3 = bytes.at(3);
+    uchar byte0 = bytes.at(0);
+    uchar byte1 = bytes.at(1);
+    uchar byte2 = bytes.at(2);
+    uchar byte3 = bytes.at(3);
 
     if(byte0 >> 6)
     {
@@ -78,13 +78,13 @@ QByteArray Command::toByteArray()
     return byteArray;
 }
 
-const char Command::getAddress() const
+const uchar Command::getAddress() const
 {
     return address;
 }
 
 const QByteArray &Command::getData() const
 {
-    return byteArray;
+    return data;
 }
 

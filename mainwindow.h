@@ -20,7 +20,7 @@ public:
 
 public slots:
     void btnOpenSerialSlot();
-    void bytesAvailable(const QByteArray);
+    void bytesAvailable();
     void timeout();
 
 private:

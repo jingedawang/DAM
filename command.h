@@ -8,10 +8,10 @@ class Command : public QObject
     Q_OBJECT
 public:
     explicit Command(QObject *parent = 0);
-    explicit Command(bool, char, QByteArray);
+    explicit Command(bool, uchar, QByteArray);
     explicit Command(QByteArray bytes);
     QByteArray toByteArray();
-    const char getAddress() const;
+    const uchar getAddress() const;
     const QByteArray &getData() const;
 
 signals:
@@ -21,7 +21,7 @@ public slots:
 private:
     QByteArray byteArray;
     bool isRead;
-    char address;
+    uchar address;
     QByteArray data;
 };
 
