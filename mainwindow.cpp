@@ -26,14 +26,19 @@ MainWindow::MainWindow(QWidget *parent) :
     //启动300ms定时器
 //    timer.start(300);
 
+    //单选按钮响应
     connect(ui->rdo_Q, SIGNAL(toggled(bool)), this, SLOT(rdoChecked(bool)));
     connect(ui->rdo_I, SIGNAL(toggled(bool)), this, SLOT(rdoChecked(bool)));
 
+    //启动AD校准按钮
     connect(ui->btn_start_AD_calibrate, SIGNAL(clicked()), this, SLOT(btnStartADCalibrateClicked()));
 
     //测试用按钮
     connect(ui->btn_test_query, SIGNAL(clicked()), this, SLOT(btnTestQueryClicked()));
 
+    //启动停止采样存储按钮
+    connect(ui->btn_start_sample_storage, SIGNAL(clicked()), this, SLOT(btnStartSampleStorageClicked()));
+    connect(ui->btn_stop_sample_storage, SIGNAL(clicked()), this, SLOT(btnStopSampleStorageClicked()));
 }
 
 MainWindow::~MainWindow()
@@ -393,4 +398,40 @@ void MainWindow::btnStartADCalibrateClicked()
 void MainWindow::btnTestQueryClicked()
 {
     timeout();
+}
+
+void MainWindow::btnStartSampleStorageClicked()
+{
+    QByteArray data = registers.registers[0x0c].data;
+    if(data.at(1) & 0x40 && (data.at(0) & 0x02 || data.at(0) & 0x04) && !(data.at(1) & 0x02) && !(data.at(1) & 0x01))
+    {
+        QMessageBox msgBox;
+        msgBox.setText("将启动采样存储功能");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        msgBox.setButtonText(QMessageBox::Yes, "确认");
+        msgBox.setButtonText(QMessageBox::Cancel, "取消");
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes)
+        {
+            uint triggerCount = ui->edt_trigger_count->text().toInt();
+            uint sampleNum = ui->edt_sample_num->text().toInt();
+            uint preSampleNum = ui->edt_pre_sample_num->text().toInt();
+            uint startFrameno = ui->edt_frame_startno->text().toInt();
+            uint storageFrameNum = ui->edt_storage_frame_num->text().toInt();
+            qDebug() << "hhahfiehgeowghewio" << endl;
+        }
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("当前设备不能启动采样存储功能");
+        msgBox.exec();
+    }
+
+}
+
+void MainWindow::btnStopSampleStorageClicked()
+{
+
 }

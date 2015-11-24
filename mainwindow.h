@@ -27,6 +27,8 @@ public slots:
     void rdoChecked(bool checked);
     void btnStartADCalibrateClicked();
     void btnTestQueryClicked();
+    void btnStartSampleStorageClicked();
+    void btnStopSampleStorageClicked();
 
 private:
     Ui::MainWindow *ui;

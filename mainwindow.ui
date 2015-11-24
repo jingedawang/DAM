@@ -411,13 +411,13 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
-       <widget class="QLineEdit" name="lineEdit_22"/>
+       <widget class="QLineEdit" name="edt_trigger_count"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_23"/>
+       <widget class="QLineEdit" name="edt_sample_num"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_24"/>
+       <widget class="QLineEdit" name="edt_pre_sample_num"/>
       </item>
      </layout>
     </widget>
@@ -432,10 +432,10 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_11">
       <item>
-       <widget class="QLineEdit" name="lineEdit_25"/>
+       <widget class="QLineEdit" name="edt_frame_startno"/>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_26"/>
+       <widget class="QLineEdit" name="edt_storage_frame_num"/>
       </item>
      </layout>
     </widget>
@@ -450,9 +450,9 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="btn_start_sample_storage">
         <property name="text">
-         <string>启动采用存储</string>
+         <string>启动采样存储</string>
         </property>
        </widget>
       </item>
@@ -470,7 +470,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="btn_stop_sample_storage">
         <property name="text">
          <string>终止采样存储</string>
         </property>
