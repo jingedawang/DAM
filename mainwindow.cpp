@@ -24,7 +24,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(timeout()));
     //启动300ms定时器
-    timer.start(300);
+//    timer.start(300);
+
+    connect(ui->rdo_Q, SIGNAL(toggled(bool)), this, SLOT(rdoChecked(bool)));
+    connect(ui->rdo_I, SIGNAL(toggled(bool)), this, SLOT(rdoChecked(bool)));
+
+    connect(ui->btn_start_AD_calibrate, SIGNAL(clicked()), this, SLOT(btnStartADCalibrateClicked()));
+
+    //测试用按钮
+    connect(ui->btn_test_query, SIGNAL(clicked()), this, SLOT(btnTestQueryClicked()));
 
 }
 
@@ -72,15 +80,15 @@ void MainWindow::bytesAvailable()
         QByteArray &data = registers.registers[0x0c].data;
         //1:0位
         //系统状态
-        if(data.at(1) & 0x03 == 0)
+        if(!(data.at(1) & 0x03))
         {
             ui->edt_system_state->setText("空闲");
         }
-        else if(data.at(1) & 0x03 == 0x10)
+        else if((data.at(1) & 0x02) && !(data.at(1) & 0x01))
         {
             ui->edt_system_state->setText("采样存储功能");
         }
-        else if(data.at(1) & 0x03 == 0x11)
+        else if((data.at(1) & 0x02) && (data.at(1) & 0x01))
         {
             ui->edt_system_state->setText("数据导出功能");
         }
@@ -313,4 +321,76 @@ void MainWindow::timeout()
     serialComm.send(command13.toByteArray());
     serialComm.send(command14.toByteArray());
 
+}
+
+void MainWindow::rdoChecked(bool checked)
+{
+    if(!checked)
+    {
+        return;
+    }
+    uchar byte0 = 0;
+    uchar byte1;
+    if(ui->rdo_Q->isChecked())
+    {
+        byte1 = 0x06;
+    }
+    else if(ui->rdo_I->isChecked())
+    {
+        byte1 = 0x0a;
+    }
+    QByteArray data;
+    data.append(byte0).append(byte1);
+    Command command(false, 0x0d, data);
+    serialComm.send(command.toByteArray());
+    QMessageBox msgBox;
+    msgBox.setText("请启动AD校准功能");
+    msgBox.exec();
+}
+
+void MainWindow::btnStartADCalibrateClicked()
+{
+    QByteArray data = registers.registers[0x0c].data;
+    if(!(data.at(0) & 0x01) && (data.at(1) & 0x80) && (data.at(1) & 0x20))
+    {
+        QMessageBox msgBox;
+        msgBox.setText("将启动AD校准功能");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Yes);
+        int ret = msgBox.exec();
+        if(ret == QMessageBox::Yes)
+        {
+            uchar byte0 = 0;
+            uchar byte1_first;
+            uchar byte1_second;
+            if(ui->rdo_Q->isChecked())
+            {
+                byte1_first = 0x04;
+                byte1_second = 0x06;
+            }
+            else if(ui->rdo_I->isChecked())
+            {
+                byte1_first = 0x08;
+                byte1_second = 0x0a;
+            }
+            QByteArray data_first, data_second;
+            data_first.append(byte0).append(byte1_first);
+            data_second.append(byte0).append(byte1_second);
+            Command command_first(false, 0x0d, data_first);
+            Command command_second(false, 0x0d, data_second);
+            serialComm.send(command_first.toByteArray());
+            serialComm.send(command_second.toByteArray());
+        }
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("当前设备不能执行AD校准操作");
+        msgBox.exec();
+    }
+}
+
+void MainWindow::btnTestQueryClicked()
+{
+    timeout();
 }

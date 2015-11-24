@@ -8,7 +8,7 @@ class Command : public QObject
     Q_OBJECT
 public:
     explicit Command(QObject *parent = 0);
-    explicit Command(bool, uchar, QByteArray);
+    explicit Command(bool isRead, uchar address, QByteArray data);
     explicit Command(QByteArray bytes);
     QByteArray toByteArray();
     const uchar getAddress() const;

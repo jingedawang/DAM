@@ -40,6 +40,14 @@ bool SerialCommunication::openPort(int index)
     }
     //选中index指向的端口
     selectedSerial.setPort(serials.at(index));
+    //波特率9600
+    selectedSerial.setBaudRate(QSerialPort::Baud9600);
+    //数据位8位
+    selectedSerial.setDataBits(QSerialPort::Data8);
+    //奇校验
+    selectedSerial.setParity(QSerialPort::OddParity);
+    //停止位1位
+    selectedSerial.setStopBits(QSerialPort::OneStop);
     //打开新端口
     bool success = selectedSerial.open(QSerialPort::ReadWrite);
     if(!success)

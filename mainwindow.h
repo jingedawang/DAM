@@ -5,6 +5,8 @@
 #include "serialcommunication.h"
 #include <QTimer>
 #include "registers.h"
+#include <QRadioButton>
+#include <QSignalMapper>
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +24,9 @@ public slots:
     void btnOpenSerialSlot();
     void bytesAvailable();
     void timeout();
+    void rdoChecked(bool checked);
+    void btnStartADCalibrateClicked();
+    void btnTestQueryClicked();
 
 private:
     Ui::MainWindow *ui;

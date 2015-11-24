@@ -19,7 +19,7 @@ Command::Command(bool isRead, uchar address, QByteArray data)
     {
         read = 3;
     }
-    uchar byte0 = address | isRead << 6;
+    uchar byte0 = address | read << 6;
     QByteArray command;
     command.append(byte0);
     uchar byte1;
